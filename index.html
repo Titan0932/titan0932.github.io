@@ -222,6 +222,19 @@
       .envelope.open::before {
         transform: translateY(-120%);
       }
+
+      .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in;
+      }
+      .fade-in.show {
+        opacity: 1;
+        transition: opacity 1s ease-in;
+      }
+      .fade-out {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+      }
     </style>
   </head>
 
@@ -274,6 +287,8 @@
 
     <!-- SUCCESS -->
     <div class="container hidden" id="success">
+      <p id="andAlsoMsg" class="hidden fade-in" style="font-size:28px; margin-top:15px;font-weight: bold;">And also.........</p>
+      <p id="anniversaryMsg" class="hidden fade-in" style="font-size:28px; margin-top:15px;font-weight: bold;">💖 Happy 1 Year Anniversary, My Abububu <br>365 days of loving you… and forever to go 😭❤️</p>
       <h1>YAYYYYY 💕🎉</h1>
 
       <p>
@@ -288,7 +303,7 @@
         🎟️ DATE TICKET 🎟️<br /><br />
 
         With: My Favorite Person 💖<br />
-        Location: A Romantic Surprise 😘<br />
+        Occasion: 💖 1 Year Together 💖<br>
         Date: <span id="dateText"></span><br /><br />
 
         Valid Forever ❤️
@@ -302,9 +317,9 @@
     <script>
       /* ---------------- CONFIG ---------------- */
       const cryptic = {
-        clue: "Special day remembered by lover (8)",
+        clue: "Special day remembered by lover, marking one year (8)",
 
-        answer: "00000000", // your anniversary (DDMMYYYY)
+        answer: "19022025",
 
         definition: "Special day 💕",
 
@@ -336,16 +351,16 @@
         ],
 
         message: `
-    From the moment you came into my life,
-    everything became brighter and warmer 💖
+          From the moment you came into my life,
+          everything became brighter and warmer 💖
 
-    You are my favorite person,
-    my safe place,
-    my best friend 😘
+          You are my favorite person,
+          my safe place,
+          my best friend 😘
 
-    And yes…
-    you're illegally cute 😏❤️
-    `,
+          And yes…
+          you're illegally cute 😏❤️
+          `,
         date: "February 21, 2026 💕",
       };
 
@@ -397,7 +412,7 @@
           }, 800);
         } else {
           document.getElementById("error").innerText =
-            "Wrong date 😏 Try again!";
+            "Wrongggg 😏 Try again!";
         }
       }
 
@@ -512,6 +527,24 @@
       noBtn.addEventListener("dblclick", finish);
 
       function finish() {
+        setTimeout(() => {
+          const andAlsoMsg = document.getElementById("andAlsoMsg");
+          andAlsoMsg.classList.remove("hidden");
+          andAlsoMsg.classList.add("show");
+        }, 1500);
+        setTimeout(() => {
+          const andAlsoMsg = document.getElementById("andAlsoMsg");
+          andAlsoMsg.classList.remove("show");
+          andAlsoMsg.classList.add("fade-out");
+          setTimeout(() => {
+            andAlsoMsg.classList.add("hidden");
+          }, 1000);
+        }, 3000);
+        setTimeout(() => {
+          const anniversaryMsg = document.getElementById("anniversaryMsg");
+          anniversaryMsg.classList.remove("hidden");
+          anniversaryMsg.classList.add("show");
+        }, 4000);
         document.getElementById("main").classList.add("hidden");
         document.getElementById("success").classList.remove("hidden");
 
