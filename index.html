@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>For My Cupcake 💖</title>
+
+    <style>
+      /* ---------------- BASE ---------------- */
+
+      body {
+        margin: 0;
+        font-family: "Poppins", "Comic Sans MS", sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        overflow: hidden;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        padding: 30px;
+        border-radius: 25px;
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+        position: relative;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      h1 {
+        color: #ff7eb3;
+      }
+
+      button {
+        background: linear-gradient(45deg, #ff4d88, #ff85a2);
+        border: none;
+        padding: 10px 22px;
+        border-radius: 20px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        transform: scale(1.08);
+      }
+
+      input {
+        padding: 10px;
+        width: 80%;
+        border-radius: 15px;
+        border: none;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      /* ---------------- SLIDESHOW ---------------- */
+
+      #slideshow {
+        width: 100%;
+        max-width: 400px;
+        height: min(60vw, 300px); /* responsive height */
+        margin: 20px auto;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #slideshow img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* fills nicely */
+        position: absolute;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      #slideshow img.active {
+        opacity: 1;
+      }
+
+      /* ---------------- BUTTONS ---------------- */
+
+      .buttons {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      #noBtn {
+        background: linear-gradient(45deg, #555, #999);
+      }
+
+      /* ---------------- MUSIC ---------------- */
+
+      #musicBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+      }
+
+      /* ---------------- ANIMATIONS ---------------- */
+
+      .heart {
+        position: fixed;
+        font-size: 20px;
+        animation: float 4s linear infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes float {
+        from {
+          transform: translateY(100vh);
+        }
+        to {
+          transform: translateY(-10vh);
+        }
+      }
+
+      .shake {
+        animation: shake 0.4s;
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        50% {
+          transform: translateX(5px);
+        }
+        75% {
+          transform: translateX(-5px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        animation: fall 3s linear infinite;
+      }
+
+      @keyframes fall {
+        from {
+          transform: translateY(-10vh) rotate(0);
+        }
+        to {
+          transform: translateY(110vh) rotate(360deg);
+        }
+      }
+
+      /* DATE TICKET */
+
+      .ticket {
+        margin-top: 20px;
+        padding: 20px;
+        border: 2px dashed #ff7eb3;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        font-size: 14px;
+        animation: fadeIn 1s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .envelope {
+        width: 280px;
+        height: 180px;
+        background: #ff7eb3;
+        position: relative;
+        margin: 0 auto 20px;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .envelope::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ff4d88;
+        clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+        transition: 0.8s;
+      }
+
+      .envelope.open::before {
+        transform: translateY(-120%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- LOCK -->
+    <div class="container" id="lock">
+      <div class="envelope" id="envelope"></div>
+
+      <h1>💌 Secret Message</h1>
+
+      <p>Solve if you are my Cupcake 💕<br /></p>
+
+      <p style="font-style: italic; margin-bottom: 10px">
+        🧩 <b>Love Cryptic</b><br />
+        <span id="clueText"></span>
+      </p>
+
+      <div style="margin: 10px 0">
+        <button onclick="showDef()">Definition 💡</button>
+        <button onclick="showFodder()">Fodder 🔁</button>
+        <button onclick="showInd()">Indicator 🧭</button>
+      </div>
+
+      <p id="hintBox" style="min-height: 3px"></p>
+
+      <input id="pass" type="text" placeholder="Your answer here…" />
+
+      <br /><br />
+
+      <button onclick="unlock()">Open 💖</button>
+
+      <p id="error"></p>
+    </div>
+
+    <!-- MAIN -->
+    <div class="container hidden" id="main">
+      <h1>Hi My Cupcake 💖</h1>
+
+      <div id="slideshow"></div>
+
+      <p id="msg"></p>
+
+      <h2>Will you be my Valentine? 💘</h2>
+
+      <div class="buttons">
+        <button id="yesBtn">YES ❤️</button>
+        <button id="noBtn">NO 💔</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="container hidden" id="success">
+      <h1>YAYYYYY 💕🎉</h1>
+
+      <p>
+        You’re mine forever 😘<br /><br />
+        Thank you for choosing me.<br />
+        I love you more than words ❤️
+      </p>
+
+      <h2>💋💋💋</h2>
+
+      <div id="ticket" class="ticket hidden">
+        🎟️ DATE TICKET 🎟️<br /><br />
+
+        With: My Favorite Person 💖<br />
+        Location: A Romantic Surprise 😘<br />
+        Date: <span id="dateText"></span><br /><br />
+
+        Valid Forever ❤️
+      </div>
+    </div>
+
+    <button id="musicBtn" class="hidden">🔊 Our song</button>
+
+    <audio id="music" loop></audio>
+
+    <script>
+      /* ---------------- CONFIG ---------------- */
+      const cryptic = {
+        clue: "Special day remembered by lover (8)",
+
+        answer: "00000000", // your anniversary (DDMMYYYY)
+
+        definition: "Special day 💕",
+
+        fodder: "lover",
+
+        indicator: "remembered (think back 😉)",
+      };
+      document.getElementById("clueText").innerText = cryptic.clue;
+
+      const config = {
+        herName: "My Cupcake",
+        // password: "00000000",
+
+        song: "our_song.mp3",
+
+        photos: [
+          "photos/1.jpeg",
+          "photos/2.jpeg",
+          "photos/3.jpeg",
+          "photos/4.jpeg",
+          "photos/5.jpeg",
+          "photos/6.jpeg",
+        ],
+
+        message: `
+    From the moment you came into my life,
+    everything became brighter and warmer 💖
+
+    You are my favorite person,
+    my safe place,
+    my best friend 😘
+
+    And yes…
+    you're illegally cute 😏❤️
+    `,
+        date: "February 21, 2026 💕",
+      };
+
+      /* ---------------- HINT SYSTEM ---------------- */
+      let defHintShown = false;
+      let fodderHintShown = false;
+      let indHintShown = false;
+      function showDef() {
+        if (defHintShown) return;
+        defHintShown = true;
+        document.getElementById("hintBox").innerText +=
+          "\nDefinition: " + cryptic.definition;
+        console.log("here")
+      }
+
+      function showFodder() {
+        if (fodderHintShown) return;
+        fodderHintShown = true;
+        document.getElementById("hintBox").innerText +=
+          "\nFodder: " + cryptic.fodder;
+      }
+
+      function showInd() {
+        if (indHintShown) return;
+        indHintShown = true;
+        document.getElementById("hintBox").innerText +=
+          "\nIndicator: " + cryptic.indicator;
+      }
+
+      /* ---------------- LOCK ---------------- */
+
+      const audio = document.getElementById("music");
+
+      function unlock() {
+        const val = document.getElementById("pass").value;
+
+        if (val === cryptic.answer) {
+          document.getElementById("envelope").classList.add("open");
+          setTimeout(() => {
+            document.getElementById("lock").classList.add("hidden");
+            document.getElementById("main").classList.remove("hidden");
+
+            startMusic();
+            startHearts();
+            initSlideshow();
+
+            document.getElementById("msg").innerText = config.message;
+            document.getElementById("musicBtn").classList.remove("hidden");
+          }, 800);
+        } else {
+          document.getElementById("error").innerText =
+            "Wrong date 😏 Try again!";
+        }
+      }
+
+      /* ---------------- MUSIC ---------------- */
+
+      let playing = false;
+
+      audio.src = config.song;
+      audio.volume = 0.4;
+
+      function startMusic() {
+        audio.play();
+        playing = true;
+      }
+
+      document.getElementById("musicBtn").onclick = () => {
+        if (playing) {
+          audio.pause();
+          playing = false;
+        } else {
+          audio.play();
+          playing = true;
+        }
+      };
+
+      /* ---------------- SLIDESHOW ---------------- */
+
+      function initSlideshow() {
+        const box = document.getElementById("slideshow");
+
+        config.photos.forEach((src, i) => {
+          const img = document.createElement("img");
+          img.src = src;
+
+          if (i === 0) img.classList.add("active");
+
+          box.appendChild(img);
+        });
+
+        let idx = 0;
+
+        setInterval(() => {
+          const imgs = document.querySelectorAll("#slideshow img");
+
+          imgs[idx].classList.remove("active");
+
+          idx = (idx + 1) % imgs.length;
+
+          imgs[idx].classList.add("active");
+        }, 3000);
+      }
+
+      /* ---------------- HEARTS ---------------- */
+
+      function startHearts() {
+        setInterval(() => {
+          const h = document.createElement("div");
+
+          h.className = "heart";
+          h.innerText = "❤️";
+
+          h.style.left = Math.random() * 100 + "vw";
+          h.style.animationDuration = 3 + Math.random() * 3 + "s";
+
+          document.body.appendChild(h);
+
+          setTimeout(() => h.remove(), 5000);
+        }, 350);
+      }
+
+      /* ---------------- NO BUTTON CHAOS ---------------- */
+
+      let noCount = 0;
+
+      const noBtn = document.getElementById("noBtn");
+      let yesBtn = document.getElementById("yesBtn");
+
+      noBtn.onclick = () => {
+        if (noCount == -1) finish();
+        noCount++;
+
+        if (noCount === 1) {
+          noBtn.innerText = "Are you sure? 🥺";
+        } else if (noCount === 2) {
+          noBtn.style.transform = "scale(0.8)";
+          noBtn.innerText = "Are you sure? 🥺";
+        } else if (noCount === 3) {
+          noBtn.innerText = "Think again 😏❤️";
+          yesBtn.style.transform = "scale(1.5)";
+        } else if (noCount === 4) {
+          noBtn.innerText = "WHYYYYYYYY? 😭";
+          document.body.classList.add("shake");
+
+          setTimeout(() => document.body.classList.remove("shake"), 400);
+        } else if (noCount === 5) {
+          noBtn.innerText = "You meanie! huhuuhuuuu😭";
+        } else if (noCount === 6) {
+          noBtn.innerText = "badmas bachha! ok fine....";
+          yesBtn.style.transform = "scale(0.5)";
+        } else {
+          noCount = -1;
+          noBtn.innerText = "I'm just not taking no for an answer! hmphhhh! 😤";
+          noBtn.style.background = "linear-gradient(45deg,#ff4d88,#ff85a2)";
+          yesBtn.style.transform = "scale(1.5)";
+        }
+      };
+
+      /* ---------------- YES ---------------- */
+
+      yesBtn.onclick = finish;
+
+      noBtn.addEventListener("dblclick", finish);
+
+      function finish() {
+        document.getElementById("main").classList.add("hidden");
+        document.getElementById("success").classList.remove("hidden");
+
+        audio.volume = 0.7;
+
+        // Show ticket
+        document.getElementById("ticket").classList.remove("hidden");
+        document.getElementById("dateText").innerText = config.date;
+
+        confetti();
+      }
+
+      /* ---------------- CONFETTI ---------------- */
+
+      function confetti() {
+        for (let i = 0; i < 120; i++) {
+          const c = document.createElement("div");
+
+          c.className = "confetti";
+
+          c.style.left = Math.random() * 100 + "vw";
+
+          c.style.background = `hsl(${Math.random() * 360},100%,70%)`;
+
+          c.style.animationDuration = 2 + Math.random() * 3 + "s";
+
+          document.body.appendChild(c);
+        }
+      }
+    </script>
+  </body>
+</html>
